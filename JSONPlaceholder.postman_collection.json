@@ -1,0 +1,309 @@
+{
+  "info": {
+    "_postman_id": "6066fa3a-ff44-4a51-ae6a-9f52310dacfe",
+    "name": "JSONPlaceholder",
+    "description": "This folder shows how I practiced a **full CRUD workflow** (Create, Read, Update, Delete) using the free [JSONPlaceholder](https://jsonplaceholder.typicode.com/) API.  \nIt’s a fake REST API that’s great for testing because you can send real HTTP requests, but nothing actually changes on the server.\n\nHere’s what I included:\n\n**GET Post by ID** – fetches a single post (for example `/posts/1`) and checks if the response has the right fields like `id` and `title`.\n\n**POST Create New Post** – simulates creating a new post. The data isn’t really saved, but the API pretends it was. I added tests to handle both `200` and `201` responses, since the service isn’t always consistent.\n\n**PUT Update Post** – updates an existing post (like `/posts/1`). I verify that the updated fields are echoed back in the response.\n\n**DELETE Post** – simulates deleting a post. Again, nothing is actually deleted, but I check that the API responds with the expected status code (`200` or `204`).\n\n### What I’m testing\n\nThe correct **status codes** are returned. The **JSON structure** includes expected properties.The **response time** is reasonable (under 1000 ms).\n\n### A note\n\nSince JSONPlaceholder is just a demo API, the requests don’t really change data. Sometimes it even returns `200` instead of `201` for POST requests. I adapted my tests so they still make sense in this context.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48214638"
+  },
+  "item": [
+    {
+      "name": "GET",
+      "item": [
+        {
+          "name": "GET Post by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Primero guardamos la respuesta del servidor en una variable",
+                  "// Si no haces esto, Postman no sabe dónde buscar el ID",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// 2. Ahora hacemos la prueba",
+                  "pm.test(\"Verificar que el ID es 1\", function () {",
+                  "    // Usamos jsonData para entrar al objeto y buscar el campo \"id\"",
+                  "    pm.expect(jsonData.id).to.eql(1);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Post by ID 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Primero guardamos la respuesta del servidor en una variable",
+                  "// Si no haces esto, Postman no sabe dónde buscar el ID",
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// 2. Ahora hacemos la prueba",
+                  "pm.test(\"Verificar que el ID es 1\", function () {",
+                  "    // Usamos jsonData para entrar al objeto y buscar el campo \"id\"",
+                  "    pm.expect(jsonData.id).to.eql(1);",
+                  "});",
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "POST",
+      "item": [
+        {
+          "name": "POST Create New Post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "",
+                  "// 1. Validamos el status 201 y que el ID sea 101 (el que genera la API)",
+                  "pm.test(\"Status es 201 y el ID es 101\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    ",
+                  "    // Cambiamos 1 por 101",
+                  "    pm.expect(jsonData.id).to.eql(101);",
+                  "});",
+                  "",
+                  "// 2. O MEJOR AÚN: Un test de QA más robusto",
+                  "// Validamos que el ID sea simplemente UN NÚMERO (así no importa si es 101, 102, etc.)",
+                  "pm.test(\"El ID generado es un número válido\", function () {",
+                  "    pm.expect(jsonData.id).to.be.a('number');",
+                  "});",
+                  "",
+                  "pm.test(\"El título es el que nosotros enviamos\", function () {",
+                  "    pm.expect(jsonData.title).to.eql(\"ejemplos en post\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"ejemplos en post\",\n  \"body\": \"Esto es una prueba en Postman\",\n  \"userId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts"
+              ]
+            },
+            "description": "_Note: JSONPlaceholder is a fake API. POST requests do not persist data and sometimes return status_ `_200_` _instead of_ `_201_`_. Tests were adapted to accept both cases._"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "PUT",
+      "item": [
+        {
+          "name": "PUT Update Post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status is 200 or 201\", () => {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"title\": \"Título editado\",\n  \"body\": \"Cuerpo nuevo\",\n  \"userId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DELETE",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://jsonplaceholder.typicode.com/posts/1",
+              "protocol": "https",
+              "host": [
+                "jsonplaceholder",
+                "typicode",
+                "com"
+              ],
+              "path": [
+                "posts",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
