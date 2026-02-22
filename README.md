@@ -1,5 +1,5 @@
-# postman-api-testing-practice
-Pruebas automatizadas y debugging con Postman y JSONPlaceholder
+# postman-api-testing-practice Pruebas automatizadas y JSONPlaceholder
+
 # Proyecto de Pruebas de API con Postman 🚀
 
 Este repositorio contiene una colección de Postman diseñada para probar los endpoints de una API REST (JSONPlaceholder).
